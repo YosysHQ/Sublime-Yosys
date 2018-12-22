@@ -1,0 +1,63 @@
+%YAML 1.2
+---
+name: Yosys RTLIL
+file_extensions: [il]
+scope: source.rtlil
+
+variables:
+  keyword: '(always|assign|attribute|autoidx|case|cell|connect|edge|end|global|high|init|inout|input|low|memory|module|negedge|offset|output|parameter|posedge|process|signed|size|switch|sync|update|upto|width|wire)'
+  ident_ext: '\\[^ \t\r\n]+'
+  ident_int: '\$[^ \t\r\n]+'
+  ident_dot: '\.[0-9]+'
+  ident: '({{ident_ext}}|{{ident_int}}|{{ident_dot}})'
+  value: "[0-9]+'[01xzm-]*"
+  integer: '-?[0-9]+'
+
+contexts:
+  common:
+    - match: '#'
+      scope: punctuation.definition.comment
+      push: comment
+    - match: '{{keyword}}'
+      scope: keyword.rtlil
+    - match: '{{ident}}'
+      scope: variable.other.rtlil
+    - match: '{{value}}'
+      scope: constant.numeric.rtlil
+    - match: '{{integer}}'
+      scope: constant.numeric.integer.rtlil
+    - match: '"'
+      scope: punctuation.definition.string.begin.rtlil
+      push: string_body
+  main:
+    - match: 'cell'
+      scope: keyword.rtlil
+      push: cell_definition
+    - match: '(module|wire|memory|process)'
+      scope: keyword.rtlil
+      push: definition
+    - include: common
+  comment:
+    - meta_scope: comment.line
+    - match: '\n'
+      pop: true
+  definition:
+    - match: '{{ident}}'
+      scope: entity.name.rtlil
+      pop: true
+    - include: common
+  cell_definition:
+    - match: '{{ident_int}}'
+      scope: support.function.rtlil
+      set: definition
+    - match: '{{ident}}'
+      scope: variable.other.rtlil
+      set: definition
+    - include: common
+  string_body:
+    - meta_scope: string.quoted.double.rtlil
+    - match: '\\.'
+      scope: constant.character.escape.rtlil
+    - match: '"'
+      scope: punctuation.definition.string.end.rtlil
+      pop: true
