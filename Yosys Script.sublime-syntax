@@ -1,0 +1,53 @@
+%YAML 1.2
+---
+name: Yosys Script
+file_extensions: [ys]
+scope: source.yosys
+
+variables:
+  ident: '[A-Za-z_][A-Za-z_0-9]*'
+
+contexts:
+  common:
+    - match: '#'
+      scope: punctuation.definition.comment
+      push: comment
+    - match: '"'
+      scope: punctuation.definition.string.begin.yosys
+      push: string
+  main:
+    - match: '{{ident}}'
+      scope: variable.function.yosys, meta.function-call.yosys
+      push: command
+    - include: common
+  command:
+    - meta_content_scope: meta.function-call.arguments.yosys
+    - match: '-{{ident}}'
+      scope: variable.parameter.option.yosys
+    - match: '\b-?[0-9]+\b'
+      scope: constant.numeric.integer.decimal
+    - match: '\+/[^\s]+'
+      scope: support.constant.library-name.yosys
+    - match: '\n'
+      pop: true
+    - match: ';(?=\s)'
+      scope: keyword.operator.yosys
+      pop: true
+    - match: ';{2,3}(?=\s)'
+      scope: keyword.control.yosys
+      pop: true
+    - match: ';{1,3}'
+      scope: invalid.illegal
+      pop: true
+    - include: common
+  comment:
+    - meta_scope: comment.line
+    - match: '(?=\n)'
+      pop: true
+  string:
+    - meta_scope: string.quoted.double.yosys
+    - match: '\\.'
+      scope: constant.character.escape.yosys
+    - match: '"'
+      scope: punctuation.definition.string.end.yosys
+      pop: true
