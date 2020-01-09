@@ -42,7 +42,7 @@ contexts:
     - include: common
   comment:
     - meta_scope: comment.line
-    - match: '(?=\n)'
+    - match: '\n'
       pop: true
   string:
     - meta_scope: string.quoted.double.yosys
