@@ -5,7 +5,7 @@ file_extensions: [il]
 scope: source.rtlil
 
 variables:
-  keyword: '(always|assign|attribute|autoidx|case|cell|connect|edge|end|global|high|init|inout|input|low|memory|module|negedge|offset|output|parameter|posedge|process|signed|size|switch|sync|update|upto|width|wire)'
+  keyword: '(always|assign|attribute|autoidx|case|cell|connect|edge|end|global|high|init|inout|input|low|memory|module|negedge|offset|output|parameter|posedge|process|real|signed|size|switch|sync|update|upto|width|wire)'
   ident_ext: '\\[^ \t\r\n]+'
   ident_int: '\$[^ \t\r\n]+'
   ident_dot: '\.[0-9]+'
